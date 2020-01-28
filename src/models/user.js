@@ -59,6 +59,11 @@ userSchema.methods.toJSON = function () {
     return userObject;
 }
 
+userSchema.virtual('tasks' , {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
 
 //statics for models , methods for instances
 userSchema.methods.generateAuthToken = async function (){
