@@ -4,25 +4,6 @@ const auth = require('../middleware/auth');
 const User = require('../models/user');
 const multer = require('multer');
 
-const upload = multer({
-    dest:'avatars',
-    limits:{
-        fileSize: 1000000 //1 MB in bytes
-    },
-    fileFilter(req , file , cb){
-        //using regular expressions
-        if(!file.originalname.match(/\.(doc|docx)$/)){
-            return cb(new Error('Please upload a word document'))
-        }
-
-        cb(undefined , true);
-
-        // cb(new Error('File must be a PDF'));
-        // cb(undefined , true);
-        // cb(undefined , false);
-    }
-})
-
 router.post('/users' , async (req , res) => {
     const user = new User(req.body);
 
@@ -104,6 +85,19 @@ router.delete('/users/me' , auth , async (req , res) => {
     }
 })
 
+
+const upload = multer({
+    dest:'avatars',
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req , file , cb){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('Please upload an image'))
+        }
+        cb(undefined, true)
+    }
+})
 router.post('/users/me/upload' , upload.single('avatar') , (req,res) => {
     res.send();
 });
